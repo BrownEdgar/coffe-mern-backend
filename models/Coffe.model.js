@@ -2,13 +2,25 @@ const { default: mongoose } = require("mongoose");
 
 const coffeSchema = mongoose.Schema({
 	id: mongoose.Schema.Types.ObjectId,
-	title: {},
-	description: {},
+	title: {
+		type: String,
+		required: true
+	},
+	description: {
+		type: String,
+		required: true
+	},
+	vendor: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Vendor"
+	},
 	price: {
 		type: Number,
 		min: 0.99
 	},
-	image: {},
+	image: {
+		type: String,
+	},
 	saleProcent: {
 		type: Number,
 	},
@@ -20,10 +32,7 @@ const coffeSchema = mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Category"
 	},
-	title: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: "Vendor"
-	},
+
 	size: {
 		enum: ["100", "150", "300", "500"]
 	},
@@ -31,6 +40,10 @@ const coffeSchema = mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Color"
 	},
+	tags:{
+		type: [String],
+		required: true
+	}
 })
 
 

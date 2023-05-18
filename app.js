@@ -5,8 +5,17 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
 
+const models = require('./models')
+const services = require('./services')
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var addRouter = require('./routes/added');
+
+
+
+
+const { default: mongoose } = require('mongoose');
 
 var app = express();
 
@@ -24,12 +33,33 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/add', addRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
+app.models = {
+	color: models.color,
+	category: models.category,
+	vendor: models.vendor,
+	coffee: models.coffee,
+}
+
+app.services = {
+	vendors: new (services.vendorService)(app.models),
+	colors: new (services.colorService)(app.models),
+	categories: new (services.categoryService)(app.models),
+	coffees: new (services.coffeeService)(app.models),
+}
+
+mongoose.connect("mongodb://0.0.0.0:27017/test",
+	{
+		useUnifiedTopology: true,
+		useNewUrlParser: true
+	},
+).then(() => console.log('connected to db'));
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
